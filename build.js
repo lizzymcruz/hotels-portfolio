@@ -284,7 +284,7 @@ function home(L) {
   <form class="calc" data-calc-form aria-labelledby="calc-h" onsubmit="return false">
    <p class="lab" id="calc-h"><span class="dot" aria-hidden="true"></span>${t.calc.h}</p>
    ${calcField('rooms', t.calc.rooms, 12, 1, 300, 1)}
-   ${calcField('rate', t.calc.rate, 120, 20, 3000, 5, '', '€')}
+   ${calcField('rate', t.calc.rate, 120, 20, 3000, 5, '€')}
    ${calcField('occ', t.calc.occ, 70, 5, 100, 5, '%')}
    ${calcField('ota', t.calc.ota, 60, 0, 100, 5, '%')}
    <div class="calc-out" aria-live="polite" data-calc-out data-locale="${t.calc.locale}" data-win="${esc(t.calc.win('{x}'))}">

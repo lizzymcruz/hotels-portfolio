@@ -226,7 +226,7 @@ function home(L) {
   const calcField = (name, label, val, min, max, step, unit, pre) => `<div class="cf">
    <label for="c-${name}">${label}</label>
    <div class="cf-in"><button type="button" class="step" data-step="-1" aria-label="${t.calc.less}: ${label}" aria-controls="c-${name}">${ICON.minus}</button>
-    <span class="cf-box">${pre ? `<span class="unit" aria-hidden="true">${pre}</span>` : ''}<input id="c-${name}" name="${name}" type="number" inputmode="numeric" value="${val}" min="${min}" max="${max}" step="${step}" data-calc>${unit ? `<span class="unit" aria-hidden="true">${unit}</span>` : ''}</span>
+    <span class="cf-box">${pre ? `<span class="unit" aria-hidden="true">${pre}</span>` : ''}<input id="c-${name}" name="${name}" type="number" inputmode="numeric" value="${val}" min="${min}" max="${max}" step="${step}" data-calc><span class="unit" aria-hidden="true">${unit || ''}</span></span>
     <button type="button" class="step" data-step="1" aria-label="${t.calc.more}: ${label}" aria-controls="c-${name}">${ICON.plus}</button></div>
   </div>`;
   const P = (s) => PROJECTS[s];
@@ -256,7 +256,6 @@ function home(L) {
 
   const body = `
 <section class="hero" aria-labelledby="hero-h">
- <p class="hero-word" aria-hidden="true">HOTELS</p>
  <div class="wrap hero-grid">
   <div class="hero-copy">
    <p class="avail"><span class="pulse" aria-hidden="true"></span>${t.avail}</p>
@@ -270,9 +269,12 @@ function home(L) {
    <p class="dev-hint" aria-hidden="true">${ICON.mouse}${t.scrollTip}</p>
   </div>
  </div>
+ <div class="hero-foot">
+ <div class="wrap hero-word" aria-hidden="true"><svg viewBox="0 0 1200 216" preserveAspectRatio="none"><text x="0" y="216" textLength="1200" lengthAdjust="spacingAndGlyphs">HOTELS</text></svg></div>
  <div class="wrap trust">
   <p class="trust-l">${t.trustLabel}</p>
   <ul role="list">${t.trust.map(([n, c]) => `<li><b>${n}</b><span>${c}</span></li>`).join('')}</ul>
+ </div>
  </div>
 </section>
 

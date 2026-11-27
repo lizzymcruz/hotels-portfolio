@@ -25,6 +25,7 @@ const ICON = {
   menu: I('<path d="M4 8h16M4 16h16"/>'),
   close: I('<path d="M6 6l12 12M18 6 6 18"/>'),
   check: I('<path d="m5 12.5 4.5 4.5L19 7.5"/>'),
+  mouse: I('<rect x="6.5" y="3" width="11" height="18" rx="5.5"/><path d="M12 7v3"/>'),
   mail: I('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>'),
   linkedin: `<svg class="ic" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4v11H3v-11Zm6.5 0h3.8v1.5h.06c.53-1 1.84-1.8 3.64-1.8 3.9 0 4.6 2.4 4.6 5.6v5.7h-4v-5c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7v5.1h-4v-11Z"/></svg>`,
   whatsapp: `<svg class="ic" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.3Z"/></svg>`,
@@ -55,26 +56,57 @@ const pct = (n, d) => `${+((n / d) * 100).toFixed(3)}%`;
 
 /** A screenshot of one of the demos. Lumbre's photos live on Unsplash, so its shots are a transparent
  *  overlay of the page with the real Unsplash photos placed underneath at the same positions. */
-function shot(key, name, alt, { eager = false, sizes } = {}) {
+/** Width and height of a .webp file, read from its header. */
+const webpSize = (file) => {
+  const b = fs.readFileSync(file);
+  const chunk = b.toString('ascii', 12, 16);
+  if (chunk === 'VP8X') return [1 + b.readUIntLE(24, 3), 1 + b.readUIntLE(27, 3)];
+  if (chunk === 'VP8 ') return [b.readUInt16LE(26) & 0x3fff, b.readUInt16LE(28) & 0x3fff];
+  if (chunk === 'VP8L') { const n = b.readUInt32LE(21); return [1 + (n & 0x3fff), 1 + ((n >> 14) & 0x3fff)]; }
+  throw new Error('unknown webp ' + file);
+};
+const SIZE = {};
+for (const f of fs.readdirSync(path.join(SRC, 'shots'))) if (f.endsWith('.webp')) SIZE[f] = webpSize(path.join(SRC, 'shots', f));
+
+/** A screenshot of one of the demos. Lumbre's photos live on Unsplash, so its shots are a transparent
+ *  overlay of the page with the real Unsplash photos placed underneath at the same positions.
+ *  `defer` writes data-src instead of src, so the long full-page shots only load when needed. */
+function shot(key, name, alt, { eager = false, sizes, defer = false } = {}) {
   const phone = name.startsWith('m-');
+  const file = `${key}-${name}.webp`;
+  const [w, h] = SIZE[file];
+  const S = defer ? 'data-src' : 'src', SS = defer ? 'data-srcset' : 'srcset';
   const load = eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
-  const dims = phone ? 'width="600" height="1299"' : 'width="1440" height="900"';
-  const srcset = phone ? '' : ` srcset="${SH}${key}-${name}-800.webp 800w, ${SH}${key}-${name}.webp 1440w" sizes="${sizes || '(min-width: 1000px) 60vw, 92vw'}"`;
-  const img = (cls = '') => `<img class="${cls}" src="${SH}${key}-${name}.webp"${srcset} ${dims} alt="${esc(alt)}" ${load} decoding="async">`;
+  const small = SIZE[`${key}-${name}-800.webp`];
+  const srcset = small ? ` ${SS}="${SH}${key}-${name}-800.webp 800w, ${SH}${file} ${w}w" sizes="${sizes || '(min-width: 1000px) 60vw, 92vw'}"` : '';
+  const img = (cls = '') => `<img class="${cls}" ${S}="${SH}${file}"${srcset} width="${w}" height="${h}" alt="${esc(alt)}" ${load} decoding="async">`;
   if (key !== 'lu') return img('shot-img');
   const m = LU_META[`lu-${name}`];
   const layers = m.imgs.map((im) => {
     const [rl, rt, rw, rh] = im.rect; const [cl, ct, cw, ch] = im.clip;
     const factor = phone ? (rw / m.vw) * 0.55 : (rw / m.vw) * 0.8;
-    return `<span class="ly" style="left:${pct(cl, m.vw)};top:${pct(ct, m.vh)};width:${pct(cw, m.vw)};height:${pct(ch, m.vh)}"><img src="${esc(unsplashAt(im.src, factor))}" alt="" loading="${eager ? 'eager' : 'lazy'}" decoding="async" style="left:${pct(rl - cl, cw)};top:${pct(rt - ct, ch)};width:${pct(rw, cw)};height:${pct(rh, ch)};object-fit:${im.fit};object-position:${im.pos}"></span>`;
+    return `<span class="ly" style="left:${pct(cl, m.vw)};top:${pct(ct, m.vh)};width:${pct(cw, m.vw)};height:${pct(ch, m.vh)}"><img ${S}="${esc(unsplashAt(im.src, factor))}" alt="" loading="${eager ? 'eager' : 'lazy'}" decoding="async" style="left:${pct(rl - cl, cw)};top:${pct(rt - ct, ch)};width:${pct(rw, cw)};height:${pct(rh, ch)};object-fit:${im.fit};object-position:${im.pos}"></span>`;
   }).join('');
   return `<span class="shot-layered">${layers}${img('shot-img shot-over')}</span>`;
 }
+
+/** The screen of a device. With `long`, it holds the whole home page: the first screen shows straight away,
+ *  the full page loads when the visitor gets close, and they can scroll it (or hover to play it). */
+function screen(key, name, alt, opts = {}) {
+  if (!opts.long) return `<div class="mk-scr">${shot(key, name, alt, opts)}</div>`;
+  const full = name.replace('home', 'full');
+  const [w, h] = SIZE[`${key}-${full}.webp`];
+  const focus = opts.interactive ? ` tabindex="0" role="region" aria-label="${esc(alt)}"` : '';
+  return `<div class="mk-scr scr${opts.interactive ? ' scr-i' : ''}" data-scr${focus}><div class="scr-in">
+   <span class="scr-poster">${shot(key, name, opts.interactive ? '' : alt, opts)}</span>
+   <span class="scr-long" style="aspect-ratio:${w}/${h}">${shot(key, full, '', { defer: true })}</span>
+  </div></div>`;
+}
 const browser = (key, name, alt, opts = {}) => {
   const p = PROJECTS[ORDER.find((s) => PROJECTS[s].key === key)];
-  return `<div class="mk-b ${opts.cls || ''}"><div class="mk-bar" aria-hidden="true"><span class="mk-dots"><i></i><i></i><i></i></span><span class="mk-url">${p.host}</span></div><div class="mk-scr">${shot(key, name, alt, opts)}</div></div>`;
+  return `<div class="mk-b ${opts.cls || ''}"><div class="mk-bar" aria-hidden="true"><span class="mk-dots"><i></i><i></i><i></i></span><span class="mk-url">${p.host}</span></div>${screen(key, name, alt, opts)}</div>`;
 };
-const phone = (key, name, alt, opts = {}) => `<div class="mk-p ${opts.cls || ''}"><div class="mk-scr">${shot(key, name, alt, opts)}</div></div>`;
+const phone = (key, name, alt, opts = {}) => `<div class="mk-p ${opts.cls || ''}">${screen(key, name, alt, opts)}</div>`;
 
 /* ---------- illustrations for the "what I found" findings ---------- */
 const ILL = {
@@ -201,7 +233,7 @@ function home(L) {
   const work = ORDER.map((slug, i) => {
     const p = P(slug), c = p[L];
     return `<article class="wk ${i % 2 ? 'wk-rev' : ''}" aria-labelledby="wk-${p.key}">
-  <a class="wk-media" href="${t.paths.work(slug)}" tabindex="-1" aria-hidden="true">${browser(p.key, 'd-home', '', {})}${phone(p.key, 'm-home', '', { cls: 'mk-p-over' })}</a>
+  <a class="wk-media" href="${t.paths.work(slug)}" tabindex="-1" aria-hidden="true"><span class="dev" data-dev>${browser(p.key, 'd-home', '', { long: true })}${phone(p.key, 'm-home', '', { cls: 'mk-p-over', long: true })}</span></a>
   <div class="wk-copy">
    <p class="wk-num"><span>0${i + 1}</span><span class="dot" aria-hidden="true"></span><span class="pill">${t.concept}</span></p>
    <h3 id="wk-${p.key}" class="h3"><a href="${t.paths.work(slug)}">${p.name}</a></h3>
@@ -232,7 +264,11 @@ function home(L) {
    <p class="hero-p">${t.heroP}</p>
    <div class="btns">${btn('#review', t.ctaLong, 'dark')}${btn('#work', t.seeWork, 'light')}</div>
   </div>
-  <div class="hero-media" aria-hidden="true">${browser('al', 'd-home', '', { eager: true, sizes: '(min-width: 1000px) 640px, 90vw' })}${phone('al', 'm-home', '', { cls: 'mk-p-over', eager: true })}</div>
+  <div class="hero-media">
+   ${ORDER.map((slug, i) => { const q = PROJECTS[slug]; return `<div class="dev" data-dev id="dev-${q.key}"${i ? ' hidden' : ''}>${browser(q.key, 'd-home', `${q.name}, ${t.shot['d-home']}. ${t.scrollHint}`, { eager: !i, long: true, interactive: true, sizes: '(min-width: 1000px) 640px, 90vw' })}${phone(q.key, 'm-home', `${q.name}, ${t.shot['m-home']}. ${t.scrollHint}`, { cls: 'mk-p-over', eager: !i, long: true, interactive: true })}</div>`; }).join('')}
+   <div class="dev-tabs" role="group" aria-label="${t.pickDemo}">${ORDER.map((slug, i) => `<button type="button" class="dev-tab" aria-pressed="${!i}" aria-controls="dev-${PROJECTS[slug].key}" data-dev-tab><span class="dot" aria-hidden="true" style="background:${PROJECTS[slug].accent}"></span>${PROJECTS[slug].name}</button>`).join('')}</div>
+   <p class="dev-hint" aria-hidden="true">${ICON.mouse}${t.scrollTip}</p>
+  </div>
  </div>
  <div class="wrap trust">
   <p class="trust-l">${t.trustLabel}</p>
@@ -362,7 +398,7 @@ function caseStudy(L, slug) {
   <dl class="cs-details">${c.details.map(([k, v]) => `<div class="bx"><dt class="lab"><span class="dot" aria-hidden="true"></span>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
   <div class="btns">${btn(p.live, t.visit, 'dark', ' target="_blank" rel="noopener"').replace('</span><span class="btn-ic">', `<span class="sr"> ${t.newTab}</span></span><span class="btn-ic">`)}${btn(t.paths.home + '#review', t.bookCall, 'light')}</div>
  </div>
- <div class="wrap cs-hero">${browser(p.key, 'd-home', S('d-home'), { eager: true, sizes: '(min-width: 1240px) 1060px, 92vw' })}${phone(p.key, 'm-home', S('m-home'), { cls: 'mk-p-over', eager: true })}</div>
+ <div class="wrap cs-hero"><div class="dev" data-dev>${browser(p.key, 'd-home', `${S('d-home')}. ${t.scrollHint}`, { eager: true, long: true, interactive: true, sizes: '(min-width: 1240px) 1060px, 92vw' })}${phone(p.key, 'm-home', `${S('m-home')}. ${t.scrollHint}`, { cls: 'mk-p-over', eager: true, long: true, interactive: true })}</div><p class="dev-hint" aria-hidden="true">${ICON.mouse}${t.scrollTip}</p></div>
 </section>
 
 <section class="sec sec-grey" aria-labelledby="ov-h">

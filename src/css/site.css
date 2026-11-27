@@ -73,7 +73,7 @@ button,input{font:inherit;color:inherit}
 .link-ext:hover{color:var(--lav-deep)}
 
 /* ---------- header ---------- */
-.hdr{position:sticky;top:.75rem;z-index:50;width:100%;max-width:calc(var(--max) + 2 * var(--gut));margin:.75rem auto 0;padding-inline:var(--gut);height:0}
+.hdr{position:fixed;top:.75rem;left:0;right:0;z-index:50;width:100%;max-width:calc(var(--max) + 2 * var(--gut));margin:0 auto;padding-inline:var(--gut)}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:rgb(255 255 255 / .92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:999px;padding:.5rem .5rem .5rem 1.25rem;box-shadow:0 10px 30px -18px rgb(26 28 33 / .35),0 0 0 1px var(--line)}
 .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--ink);min-height:2.75rem}
 .lzlogo{width:auto;height:1.6rem}
@@ -123,7 +123,8 @@ main{display:block}
 @keyframes pulse{70%{box-shadow:0 0 0 .5rem rgb(30 142 90 / 0)}100%{box-shadow:0 0 0 0 rgb(30 142 90 / 0)}}
 .hero .h1{max-width:12ch}
 .hero-p{max-width:46ch;margin:1.5rem 0 2rem;font-size:1.125rem}
-.hero-media{position:relative;padding:0 0 3rem 0}
+.hero-media{position:relative;padding:0}
+.hero-media .dev{padding-bottom:2rem}
 .hero-media .mk-b{transform:perspective(1600px) rotateY(-6deg) rotateX(2deg);transform-origin:left center;box-shadow:0 40px 80px -40px rgb(26 28 33 / .55)}
 .trust{position:relative;display:flex;align-items:center;gap:1.5rem 3rem;flex-wrap:wrap;margin-top:clamp(2.5rem,4vw,4.5rem);padding-block:1.75rem}
 .trust-l{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;max-width:24ch;line-height:1.4}
@@ -141,7 +142,7 @@ main{display:block}
 .mk-url{flex:1;max-width:20rem;margin-inline:auto;background:#fff;border-radius:999px;font-size:.6875rem;color:var(--mute);text-align:center;padding:.15rem .75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mk-b .mk-scr{aspect-ratio:1440/900;position:relative;background:var(--grey)}
 .mk-p{width:clamp(7.5rem,16vw,12rem);background:var(--black);padding:.45rem;border-radius:1.9rem;box-shadow:0 30px 60px -30px rgb(26 28 33 / .6)}
-.mk-p .mk-scr{aspect-ratio:600/1299;border-radius:1.5rem;overflow:hidden;position:relative;background:var(--grey)}
+.mk-p .mk-scr{aspect-ratio:390/844;border-radius:1.5rem;overflow:hidden;position:relative;background:var(--grey)}
 .mk-scr img,.shot-img{width:100%;height:100%;object-fit:cover;object-position:top}
 .shot-layered{position:absolute;inset:0;display:block}
 .shot-layered .ly{position:absolute;overflow:hidden}
@@ -405,7 +406,7 @@ main{display:block}
   .swatches{grid-template-columns:repeat(3,minmax(0,1fr))}
   .btns > .btn{flex:1 1 auto}
   .pc .btn{align-self:stretch}
-  .hdr{top:.5rem;margin-top:.5rem}
+  .hdr{top:.5rem}
 }
 @media (max-width:360px){
   .btn{padding-left:1rem;gap:.6rem;font-size:.875rem}
@@ -420,3 +421,27 @@ main{display:block}
 .qa[open] .qa-ic .ic-minus{display:block}
 .menu-btn .ic-close,.menu-btn[aria-expanded=true] .ic-open{display:none}
 .menu-btn[aria-expanded=true] .ic-close{display:block}
+
+/* ---------- live screens: scroll or hover to play the whole page ---------- */
+.dev{position:relative;display:block}
+.dev[hidden]{display:none}
+.scr{overflow:hidden;scrollbar-width:none}
+.scr::-webkit-scrollbar{display:none}
+.scr-i{overflow-y:auto;cursor:ns-resize}
+.scr-in{position:relative;height:100%}
+.scr.ready .scr-in{height:auto}
+.scr-poster{position:relative;display:block;height:100%}
+.scr-long{position:relative;display:none;width:100%}
+.scr.ready .scr-long{display:block}
+.scr.ready .scr-poster{display:none}
+.scr .scr-long .shot-img{height:100%}
+.scr-i:focus-visible{outline:3px solid var(--lav-deep);outline-offset:-3px;border-radius:inherit}
+.dev-tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.75rem;position:relative}
+.dev-tab{display:inline-flex;align-items:center;gap:.5rem;min-height:2.75rem;padding:.4rem 1rem;border-radius:999px;border:0;background:rgb(255 255 255 / .45);color:var(--ink);font-size:.875rem;font-weight:500;cursor:pointer;transition:background-color .25s,color .25s}
+.dev-tab:hover{background:rgb(255 255 255 / .75)}
+.dev-tab[aria-pressed=true]{background:var(--black);color:#fff}
+.dev-tab .dot{box-shadow:0 0 0 2px rgb(255 255 255 / .8)}
+.dev-hint{display:flex;align-items:center;gap:.4rem;font-size:.8125rem;margin-top:.75rem;color:var(--ink);opacity:.8}
+.dev-hint .ic{width:1rem;height:1rem}
+.cs-hero .dev-hint{color:var(--mute);opacity:1;margin-top:1rem}
+@media (hover:none),(pointer:coarse){.scr-i{overflow:hidden;cursor:auto}.dev-hint{display:none}}

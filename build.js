@@ -217,7 +217,7 @@ function home(L) {
     '@context': 'https://schema.org', '@type': 'ProfessionalService', '@id': SITE.url + '/#service', name: 'Lizzy Cruz · Websites for small hotels',
     url: SITE.url + t.paths.home, email: SITE.email, description: t.desc, areaServed: 'ES', availableLanguage: ['en', 'es'],
     founder: { '@type': 'Person', name: 'Lizzy Cruz', url: SITE.main, sameAs: [SITE.linkedin], jobTitle: 'Web designer and developer' },
-    makesOffer: t.prices.map(([n, pr, d]) => ({ '@type': 'Offer', name: n, description: d, priceSpecification: { '@type': 'PriceSpecification', minPrice: +pr.replace(/\D/g, ''), priceCurrency: 'USD' } })),
+    makesOffer: t.prices.map(([n, pr, d]) => ({ '@type': 'Offer', name: n, description: d, priceSpecification: { '@type': 'PriceSpecification', minPrice: +pr.replace(/\D/g, ''), priceCurrency: 'EUR' } })),
   }, {
     '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: t.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
   }];
@@ -297,6 +297,7 @@ function home(L) {
   <div class="prices">${t.prices.map(([n, pr, d, list], i) => `<article class="pc ${i === 1 ? 'pc-dark' : ''}" aria-labelledby="pk-${i}">
    <div class="pc-top"><h3 class="lab ${i === 1 ? 'lab-dark' : ''}" id="pk-${i}"><span class="dot" aria-hidden="true"></span>${n}</h3>${i === 1 ? `<span class="badge">${t.popular}</span>` : ''}</div>
    <p class="pc-price"><span>${t.from}</span> ${pr}</p>
+   <p class="pc-usd">${t.approx} ${t.usd[i]}</p>
    <p class="pc-desc">${d}</p>
    <ul role="list" class="pc-list">${list.map((x) => `<li>${ICON.check}${x}</li>`).join('')}</ul>
    ${btn('#review', t.startReview, i === 1 ? 'light' : 'dark', ` aria-label="${t.startReview}: ${n}"`)}

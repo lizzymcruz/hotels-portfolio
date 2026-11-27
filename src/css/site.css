@@ -225,9 +225,11 @@ main{display:block}
 .pc-dark{background:var(--navy);color:#fff;box-shadow:none}
 .pc-top{display:flex;justify-content:space-between;align-items:center;gap:.5rem;min-height:1.75rem}
 .badge{background:var(--lav);color:var(--black);border-radius:999px;padding:.2rem .65rem;font-size:.8125rem;font-weight:500}
-.pc-price{font-size:clamp(2.5rem,2rem + 1.6vw,3.25rem);font-weight:500;letter-spacing:-.04em;line-height:1;margin:2rem 0 .75rem;display:flex;align-items:baseline;gap:.5rem}
+.pc-price{font-size:clamp(2.5rem,2rem + 1.6vw,3.25rem);font-weight:500;letter-spacing:-.04em;line-height:1;margin:2rem 0 .75rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem}
 .pc-price span{font-size:.9375rem;letter-spacing:0;font-weight:400;color:var(--mute)}
 .pc-dark .pc-price span,.pc-dark .pc-desc{color:#D2D3D8}
+.pc-usd{font-size:.875rem;color:var(--mute);margin:-.25rem 0 .75rem}
+.pc-dark .pc-usd{color:#D2D3D8}
 .pc-desc{color:var(--mute);font-size:.9375rem;min-height:3em}
 .pc-list{margin:1.25rem 0 2rem;border-top:1px solid var(--line)}
 .pc-dark .pc-list,.pc-dark .pc-list li{border-color:var(--line-dark)}

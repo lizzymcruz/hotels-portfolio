@@ -224,11 +224,11 @@ export const T = {
     process: [['Free review', 'A 5-minute video of your current site: what is costing you direct bookings and how to fix it.'], ['Design', 'Home, rooms and booking pages in Figma. Two rounds of changes, in English or Spanish.'], ['Build & connect', 'A fast, bilingual site linked to your booking engine, Google and analytics.'], ['Launch & care', 'Go live, train your team, then a monthly check so nothing breaks.']],
     pricesTag: 'Packages', pricesH: ['Clear prices,', 'no surprises.'],
     pricesNote: 'Prices are starting points. Every hotel gets a fixed quote after the free review.',
-    from: 'from', popular: 'Most hotels', startReview: 'Start with a free review',
+    from: 'from', usd: ['US$700', 'US$1,500', 'US$2,800'], approx: 'about', popular: 'Most hotels', startReview: 'Start with a free review',
     prices: [
-      ['Starter', '$700', 'A one-page site for a guest house or holiday rental.', ['One long page, ES + EN', 'Link to your booking engine', 'Contact form and WhatsApp', 'Basic SEO and schema']],
-      ['Standard', '$1,500', 'A full hotel site with room pages and booking connected.', ['Home, rooms, room pages, about, contact', 'Booking engine connected and styled', 'ES + EN (+ VA)', 'Google Business Profile setup']],
-      ['Complete', '$2,800', 'Brand, website and launch support for a new or rebranded hotel.', ['Everything in Standard', 'Logo and brand direction', 'Offers and packages pages', '3 months of care included']],
+      ['Starter', '€600', 'A one-page site for a guest house or holiday rental.', ['One long page, ES + EN', 'Link to your booking engine', 'Contact form and WhatsApp', 'Basic SEO and schema']],
+      ['Standard', '€1,300', 'A full hotel site with room pages and booking connected.', ['Home, rooms, room pages, about, contact', 'Booking engine connected and styled', 'ES + EN (+ VA)', 'Google Business Profile setup']],
+      ['Complete', '€2,400', 'Brand, website and launch support for a new or rebranded hotel.', ['Everything in Standard', 'Logo and brand direction', 'Offers and packages pages', '3 months of care included']],
     ],
     faqTag: 'FAQ', faqH: ['Questions', 'hotels ask me.'],
     faq: [
@@ -304,11 +304,11 @@ export const T = {
     process: [['Revisión gratis', 'Un vídeo de 5 minutos sobre tu web actual: qué te está costando reservas directas y cómo arreglarlo.'], ['Diseño', 'Inicio, habitaciones y reserva en Figma. Dos rondas de cambios, en español o inglés.'], ['Desarrollo', 'Una web rápida y bilingüe conectada a tu motor de reservas, Google y analítica.'], ['Lanzamiento', 'Publicamos, formo a tu equipo y después una revisión mensual para que nada falle.']],
     pricesTag: 'Paquetes', pricesH: ['Precios claros,', 'sin sorpresas.'],
     pricesNote: 'Son precios de partida. Cada hotel recibe un presupuesto cerrado después de la revisión gratis.',
-    from: 'desde', popular: 'El más elegido', startReview: 'Empieza con una revisión gratis',
+    from: 'desde', usd: ['700 USD', '1.500 USD', '2.800 USD'], approx: 'unos', popular: 'El más elegido', startReview: 'Empieza con una revisión gratis',
     prices: [
-      ['Básico', '$700', 'Una web de una página para una casa de huéspedes o un alojamiento turístico.', ['Una página larga, ES + EN', 'Enlace a tu motor de reservas', 'Formulario de contacto y WhatsApp', 'SEO básico y schema']],
-      ['Estándar', '$1,500', 'Una web de hotel completa con fichas de habitación y reserva conectada.', ['Inicio, habitaciones, fichas, sobre nosotros, contacto', 'Motor de reservas conectado y con tu estilo', 'ES + EN (+ VA)', 'Configuración del Perfil de Empresa de Google']],
-      ['Completo', '$2,800', 'Marca, web y apoyo en el lanzamiento para un hotel nuevo o que cambia de imagen.', ['Todo lo del Estándar', 'Logotipo y dirección de marca', 'Páginas de ofertas y paquetes', '3 meses de mantenimiento incluidos']],
+      ['Básico', '600 €', 'Una web de una página para una casa de huéspedes o un alojamiento turístico.', ['Una página larga, ES + EN', 'Enlace a tu motor de reservas', 'Formulario de contacto y WhatsApp', 'SEO básico y schema']],
+      ['Estándar', '1.300 €', 'Una web de hotel completa con fichas de habitación y reserva conectada.', ['Inicio, habitaciones, fichas, sobre nosotros, contacto', 'Motor de reservas conectado y con tu estilo', 'ES + EN (+ VA)', 'Configuración del Perfil de Empresa de Google']],
+      ['Completo', '2.400 €', 'Marca, web y apoyo en el lanzamiento para un hotel nuevo o que cambia de imagen.', ['Todo lo del Estándar', 'Logotipo y dirección de marca', 'Páginas de ofertas y paquetes', '3 meses de mantenimiento incluidos']],
     ],
     faqTag: 'Preguntas', faqH: ['Lo que los hoteles', 'me preguntan.'],
     faq: [

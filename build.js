@@ -270,7 +270,6 @@ function home(L) {
   </div>
  </div>
  <div class="hero-foot">
- <div class="wrap hero-word" aria-hidden="true"><svg viewBox="0 0 1200 216" preserveAspectRatio="none"><text x="0" y="216" textLength="1200" lengthAdjust="spacingAndGlyphs">HOTELS</text></svg></div>
  <div class="wrap trust">
   <p class="trust-l">${t.trustLabel}</p>
   <ul role="list">${t.trust.map(([n, c]) => `<li><b>${n}</b><span>${c}</span></li>`).join('')}</ul>
